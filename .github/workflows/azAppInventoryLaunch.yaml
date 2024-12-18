@@ -1,1 +1,47 @@
+name: Build and Deploy to Azure
+
+on:
+  push:
+    branches:
+      - inventorymgmt
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    # Checkout Code
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Login to Azure
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Build and Push Image
+    - name: Build and Push Docker Image
+      run: |
+        az acr login --name asthagacr
+        docker tag asthaguptadocker/usermgmt:v1.0 asthagacr.azurecr.io/asthaguptadocker/invmgmt:v1.0
+        docker push asthagacr.azurecr.io/asthaguptadocker/invmgmt:v1.0
+
+  deploy-webapp:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+    # Login to Azure
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Deploy Web App
+    - name: Deploy to Azure Web App
+      run: |
+        az webapp create \
+          --resource-group AsthaRg1 \
+          --plan ASP-AsthaRg1-94a3 \
+          --name AppInventoryManagement \
+          --deployment-container-image-name asthagacr.azurecr.io/asthaguptadocker/invmgmt:v1.0
 
