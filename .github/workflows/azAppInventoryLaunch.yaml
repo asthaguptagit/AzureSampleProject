@@ -36,6 +36,7 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
 
     # Deploy Web App
     - name: Deploy to Azure Web App
@@ -45,4 +46,5 @@ jobs:
           --plan ASP-AsthaRg1-94a3 \
           --name AppInventoryManagement \
           --deployment-container-image-name asthagacr.azurecr.io/asthaguptadocker/invmgmt:v1.0
+          
 
