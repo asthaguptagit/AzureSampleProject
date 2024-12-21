@@ -23,6 +23,8 @@ jobs:
     - name: Build and Push Docker Image
       run: |
         az acr login --name asthagacr
+        run: echo "Checking if the Docker image exists locally"
+        run: docker images | grep "asthaguptadocker/invmgmt"
         docker tag asthaguptadocker/invmgmt:v1.0 asthagacr.azurecr.io/asthaguptadocker/invmgmt:v1.0
         docker push asthagacr.azurecr.io/asthaguptadocker/invmgmt:v1.0
 
