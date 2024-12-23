@@ -37,7 +37,6 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
-
     # Deploy Web App
     - name: Deploy to Azure Web App
       run: |
